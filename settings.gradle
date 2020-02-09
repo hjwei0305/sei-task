@@ -1,1 +1,4 @@
 rootProject.name = 'sei-task'
+include 'sei-task-api'
+include 'sei-task-service'
+
