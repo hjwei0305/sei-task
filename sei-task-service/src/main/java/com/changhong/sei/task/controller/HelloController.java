@@ -35,6 +35,7 @@ public class HelloController implements HelloApi {
      * @param name 姓名
      * @return 返回句子
      */
+    @Override
     public ResultData<String> sayHello(String name) {
         SessionUser sessionUser = ContextUtil.getSessionUser();
         System.out.println(sessionUser);

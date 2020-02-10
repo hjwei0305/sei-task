@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(path = "platformTask", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-@Api(value = "PlatformTaskApi", tags = "后台作业执行历史")
+@Api(value = "PlatformTaskApi", tags = "SEI平台级的后台作业任务API服务")
 public class PlatformTaskController implements PlatformTaskApi {
     /**
      * 带参数测试方法(获取输入参数)
