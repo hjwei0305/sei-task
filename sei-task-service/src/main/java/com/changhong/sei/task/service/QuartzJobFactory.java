@@ -1,0 +1,119 @@
+package com.changhong.sei.task.service;
+
+import com.changhong.sei.core.context.ContextUtil;
+import com.changhong.sei.core.log.LogUtil;
+import com.changhong.sei.core.service.bo.OperateResult;
+import com.changhong.sei.core.util.JsonUtils;
+import com.changhong.sei.task.dao.JobHistoryDao;
+import com.changhong.sei.task.entity.JobHistory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * *************************************************************************************************
+ * <p/>
+ * 实现功能：定时任务运行工厂
+ * <p>
+ * ------------------------------------------------------------------------------------------------
+ * 版本          变更时间             变更人                     变更原因
+ * ------------------------------------------------------------------------------------------------
+ * 1.0.00      2017-08-03 10:12      王锦光(wangj)                新建
+ * <p/>
+ * *************************************************************************************************
+ */
+@DisallowConcurrentExecution
+public class QuartzJobFactory implements Job {
+    /**
+     * 调度任务的键值
+     */
+    public static final String SCHEDULER_KEY = "scheduleJob";
+
+    /**
+     * 获取默认租户代码
+     *
+     * @return 租户代码
+     */
+    private String getTenantCode() {
+        return ContextUtil.getProperty("sei.default-tenant.code");
+    }
+
+    /**
+     * 获取默认租户管理员
+     *
+     * @return 租户管理员
+     */
+    private String getTenantAdmin() {
+        return ContextUtil.getProperty("sei.default-tenant.admin");
+    }
+
+    /**
+     * 执行配置的后台作业
+     *
+     * @param context 作业定义
+     * @throws JobExecutionException if there is an exception while executing the job.
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        com.changhong.sei.task.entity.Job scheduleJob = (com.changhong.sei.task.entity.Job) context.getMergedJobDataMap().get(SCHEDULER_KEY);
+        if (Objects.isNull(scheduleJob)) {
+            return;
+        }
+        JobHistory history = new JobHistory();
+        com.changhong.sei.task.entity.Job job = new com.changhong.sei.task.entity.Job();
+        job.setId(scheduleJob.getId());
+        history.setJob(job);
+        Date date = new Date();
+        history.setStartTime(date);
+        //定义执行时间记录
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        LogUtil.bizLog("{} 任务开始执行 start", scheduleJob.getName());
+        try {
+            String path = String.format("%s/%s", scheduleJob.getApiPath(), scheduleJob.getMethodName());
+            // 反序列化得到输入参数
+            Map<String, String> params = null;
+            String inputParam = scheduleJob.getInputParam();
+            if (!StringUtils.isBlank(inputParam)) {
+                params = JsonUtils.fromJson(inputParam, Map.class);
+            }
+            // 设置当前执行任务的用户-租户管理员
+            if (StringUtils.isNotBlank(getTenantCode()) && StringUtils.isNotBlank(getTenantAdmin())) {
+                // todo 设置默认的执行用户
+                //ContextUtil.setSessionUser(getTenantCode(), getTenantAdmin());
+            }
+            // todo 调用API服务
+            OperateResult result = OperateResult.operationSuccess();
+            //OperateResult result = ApiClient.postViaProxyReturnResult(scheduleJob.getAppModuleCode(), path, OperateResult.class, params);
+            stopWatch.stop();
+
+            LogUtil.bizLog("{} 任务执行完成 end", scheduleJob.getName());
+            history.setSuccessful(result.successful());
+            history.setMessage(result.getMessage());
+        } catch (Exception e) {
+            String msg = String.format("执行[%s]异常！jobId:%s", scheduleJob.getName(), scheduleJob.getId());
+            LogUtil.error(msg, e);
+            stopWatch.stop();
+            history.setSuccessful(false);
+            history.setMessage("作业执行失败！");
+            history.setExceptionMessage(msg);
+        }
+        history.setElapsed(stopWatch.getTime());
+        try {
+            JobHistoryDao jobHistoryDao = ContextUtil.getBean(JobHistoryDao.class);
+            jobHistoryDao.save(history);
+        } catch (Exception e) {
+            String msg = String.format("保存作业执行历史异常：%s", JsonUtils.toJson(history));
+            LogUtil.error(msg, e);
+        }
+    }
+}

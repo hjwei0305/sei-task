@@ -5,6 +5,7 @@ dependencies {
     compile project(':sei-task-api')
     compile("com.changhong.sei:sei-service-starter:$sei_version")
     compile("mysql:mysql-connector-java:$mysqlVersion")
+    compile("org.springframework.boot:spring-boot-starter-quartz")
 
     testCompile(
             "com.changhong.sei:sei-test-starter:$sei_version"
