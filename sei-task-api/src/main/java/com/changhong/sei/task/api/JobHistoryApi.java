@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author 王锦光 wangjg
  * @version 2020-02-10 15:14
  */
-@FeignClient(name = "sei-basic", path = "jobHistory")
+@FeignClient(name = "sei-task", path = "jobHistory")
 public interface JobHistoryApi extends BaseEntityApi<JobHistoryDto>,
         FindByPageApi<JobHistoryDto> {
 }

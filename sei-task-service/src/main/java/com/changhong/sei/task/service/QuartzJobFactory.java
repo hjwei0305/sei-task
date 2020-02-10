@@ -1,6 +1,8 @@
 package com.changhong.sei.task.service;
 
+import com.changhong.sei.apitemplate.ApiTemplate;
 import com.changhong.sei.core.context.ContextUtil;
+import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.bo.OperateResult;
 import com.changhong.sei.core.util.JsonUtils;
@@ -12,6 +14,7 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -32,11 +35,12 @@ import java.util.Objects;
  */
 @DisallowConcurrentExecution
 public class QuartzJobFactory implements Job {
+    @Autowired
+    private ApiTemplate apiTemplate;
     /**
      * 调度任务的键值
      */
     public static final String SCHEDULER_KEY = "scheduleJob";
-
     /**
      * 获取默认租户代码
      *
@@ -91,9 +95,7 @@ public class QuartzJobFactory implements Job {
                 // todo 设置默认的执行用户
                 //ContextUtil.setSessionUser(getTenantCode(), getTenantAdmin());
             }
-            // todo 调用API服务
-            OperateResult result = OperateResult.operationSuccess();
-            //OperateResult result = ApiClient.postViaProxyReturnResult(scheduleJob.getAppModuleCode(), path, OperateResult.class, params);
+            ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();
 
             LogUtil.bizLog("{} 任务执行完成 end", scheduleJob.getName());
