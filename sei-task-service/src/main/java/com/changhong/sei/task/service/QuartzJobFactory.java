@@ -8,6 +8,7 @@ import com.changhong.sei.core.service.bo.OperateResult;
 import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
+import com.changhong.sei.utils.MockUserHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.DisallowConcurrentExecution;
@@ -92,8 +93,8 @@ public class QuartzJobFactory implements Job {
             }
             // 设置当前执行任务的用户-租户管理员
             if (StringUtils.isNotBlank(getTenantCode()) && StringUtils.isNotBlank(getTenantAdmin())) {
-                // todo 设置默认的执行用户
-                //ContextUtil.setSessionUser(getTenantCode(), getTenantAdmin());
+                // 设置默认的执行用户
+                MockUserHelper.mockUser(getTenantCode(), getTenantAdmin());
             }
             ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();

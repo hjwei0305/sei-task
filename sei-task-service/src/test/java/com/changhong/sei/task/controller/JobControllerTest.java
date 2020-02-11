@@ -3,11 +3,16 @@ package com.changhong.sei.task.controller;
 import com.changhong.com.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.util.JsonUtils;
+import com.changhong.sei.task.dto.JobDto;
+import com.changhong.sei.task.entity.Job;
+import com.chonghong.sei.util.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 实现功能:
@@ -24,5 +29,34 @@ public class JobControllerTest extends BaseUnitTest {
         ResultData resultData = controller.findAll();
         System.out.println(JsonUtils.toJson(resultData));
         Assert.assertTrue(resultData.successful());
+    }
+
+    private JobDto createJob(){
+        JobDto job = new JobDto();
+        job.setName("测试带参数任务");
+        job.setAppModuleCode("sei-task");
+        job.setAppModuleName("后台作业");
+        job.setApiPath("platformTask");
+        job.setMethodName("getInputParam");
+        Map<String,String> param = new HashMap<>();
+        param.put("id", "0001");
+        param.put("code", "test_code");
+        String paramJson = JsonUtils.toJson(param);
+        job.setInputParam(paramJson);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) + 2);
+        job.setCronExp(DateUtils.formatDateToCorn(cal.getTime()));
+        job.setRemark("在当前时间的2分钟后执行");
+        return job;
+    }
+
+    @Test
+    public void save(){
+        JobDto job = createJob();
+        job.setId("1CE6C14B-4CA9-11EA-BF45-080058000005");
+        ResultData<JobDto> result = controller.save(job);
+        System.out.println(result);
+        Assert.assertTrue(result.successful());
+        System.out.println(JsonUtils.toJson(result.getData()));
     }
 }

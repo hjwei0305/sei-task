@@ -1,6 +1,7 @@
 package com.changhong.sei.task.controller;
 
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.task.api.PlatformTaskApi;
 import io.swagger.annotations.Api;
 import org.springframework.http.MediaType;
@@ -27,10 +28,9 @@ public class PlatformTaskController implements PlatformTaskApi {
      */
     @Override
     public ResultData getInputParam(Map<String, String> params) {
-        // 获取输入参数：id={0},code={1}！
         String id = params.get("id");
         String code = params.get("code");
-        String msg = "输入参数为：id={"+id+"},code={"+code+"}！";
-        return ResultData.success(msg, params);
+        // 获取的输入参数为：id={0},code={1}
+        return ResultDataUtil.success(params, "00013", id, code);
     }
 }
