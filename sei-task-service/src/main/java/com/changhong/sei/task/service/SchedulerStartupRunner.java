@@ -31,7 +31,7 @@ public class SchedulerStartupRunner implements CommandLineRunner {
      * @param args incoming main method arguments
      */
     @Override
-    public void run(String... args) throws SchedulerException {
+    public void run(String... args) {
         LogUtil.info("获取所有配置有效的作业...");
         //获取所有配置有效的作业
         List<Job> jobs = jobDao.findAll();

@@ -3,9 +3,12 @@ package com.changhong.sei.task.controller;
 import com.changhong.com.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.util.JsonUtils;
+import com.changhong.sei.task.dao.JobDao;
 import com.changhong.sei.task.dto.JobDto;
 import com.changhong.sei.task.entity.Job;
 import com.chonghong.sei.util.DateUtils;
+import net.bytebuddy.asm.Advice;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import java.util.Map;
 public class JobControllerTest extends BaseUnitTest {
     @Autowired
     private JobController controller;
+    @Autowired
+    private JobDao dao;
 
     @Test
     public void findAll() {
@@ -48,6 +53,14 @@ public class JobControllerTest extends BaseUnitTest {
         job.setCronExp(DateUtils.formatDateToCorn(cal.getTime()));
         job.setRemark("在当前时间的2分钟后执行");
         return job;
+    }
+
+    @Test
+    public void checkPath(){
+        JobDto job = createJob();
+        String id = dao.checkPath("", job.getAppModuleCode(), job.getApiPath(), job.getMethodName());
+        System.out.println("id: "+id);
+        Assert.assertTrue(StringUtils.isBlank(id));
     }
 
     @Test

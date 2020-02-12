@@ -8,6 +8,7 @@ import com.changhong.sei.core.service.bo.OperateResult;
 import com.changhong.sei.core.service.bo.OperateResultWithData;
 import com.changhong.sei.task.dao.JobDao;
 import com.changhong.sei.task.entity.Job;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,11 +90,33 @@ public class JobService extends BaseEntityService<Job> {
     }
 
     /**
+     * 创建数据保存数据之前额外操作回调方法 默认为空逻辑，子类根据需要覆写添加逻辑即可
+     *
+     * @param entity 待创建数据对象
+     */
+    @Override
+    protected OperateResultWithData<Job> preInsert(Job entity) {
+        // 检查是否存在路径+方法重复的配置
+        String checkId = dao.checkPath("", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
+        if (StringUtils.isNotBlank(checkId)){
+            // 后台作业【{0}-{1}-{2}】已经存在！
+            return OperateResultWithData.operationFailure("00017", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
+        }
+        return super.preInsert(entity);
+    }
+
+    /**
      * 更新数据保存数据之前额外操作回调方法 默认为空逻辑，子类根据需要覆写添加逻辑即可
      *
      * @param entity 待更新数据对象
      */
     protected OperateResultWithData<Job> preUpdate(Job entity) {
+        // 检查是否存在路径+方法重复的配置
+        String checkId = dao.checkPath(entity.getId(), entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
+        if (StringUtils.isNotBlank(checkId)){
+            // 后台作业【{0}-{1}-{2}】已经存在！
+            return OperateResultWithData.operationFailure("00017", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
+        }
         if (entity.getDisable()) {
             String jobId = entity.getId();
             OperateResult result = scheduleJobService.removeJob(jobId);
