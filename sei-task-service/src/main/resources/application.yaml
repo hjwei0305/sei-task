@@ -61,5 +61,5 @@ spring:
 # sei 参数配置
 sei:
   default-tenant:
-    code: 10044
-    admin: admin
+    code: global
+    admin: sei
