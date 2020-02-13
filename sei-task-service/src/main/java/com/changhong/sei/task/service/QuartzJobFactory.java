@@ -47,7 +47,7 @@ public class QuartzJobFactory implements Job {
      *
      * @return 租户代码
      */
-    private String getTenantCode() {
+    public static String getTenantCode() {
         return ContextUtil.getProperty("sei.default-tenant.code");
     }
 
@@ -56,8 +56,15 @@ public class QuartzJobFactory implements Job {
      *
      * @return 租户管理员
      */
-    private String getTenantAdmin() {
+    public static String getTenantAdmin() {
         return ContextUtil.getProperty("sei.default-tenant.admin");
+    }
+
+    /**
+     * 设置当前用户为默认租户
+     */
+    public static void setToTenantAdmin(){
+        MockUserHelper.mockUser(getTenantCode(), getTenantAdmin());
     }
 
     /**

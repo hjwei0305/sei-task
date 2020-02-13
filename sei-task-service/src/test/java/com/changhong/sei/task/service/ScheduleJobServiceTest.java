@@ -1,5 +1,6 @@
 package com.changhong.sei.task.service;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.test.BaseUnitTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +17,11 @@ public class ScheduleJobServiceTest extends BaseUnitTest {
     @Test
     public void removeAllJob() {
         service.removeAllJob();
+    }
+
+    @Test
+    public void testMock(){
+        QuartzJobFactory.setToTenantAdmin();
+        System.out.println(ContextUtil.getSessionUser());
     }
 }

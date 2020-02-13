@@ -1,9 +1,11 @@
 package com.changhong.sei.task.controller;
 
 import com.changhong.sei.apitemplate.ApiTemplate;
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JsonUtils;
+import com.changhong.sei.task.service.QuartzJobFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ public class PlatformTaskControllerTest extends BaseUnitTest {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("id", "0002");
         params.put("code", "test-02");
+        QuartzJobFactory.setToTenantAdmin();
+        System.out.println(ContextUtil.getSessionUser());
         ResultData resultData = apiTemplate.postByAppModuleCode("sei-task", "platformTask/getInputParam", ResultData.class, params);
         System.out.println(JsonUtils.toJson(resultData));
         Assert.assertTrue(resultData.successful());
