@@ -9,6 +9,7 @@ import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
 import com.changhong.sei.utils.MockUserHelper;
 import com.chonghong.sei.util.DateUtils;
+import com.chonghong.sei.util.thread.ThreadLocalUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.DisallowConcurrentExecution;
@@ -102,6 +103,8 @@ public class QuartzJobFactory implements Job {
                 // 设置默认的执行用户
                 setToTenantAdmin();
             }
+            // 打印当前会话Token信息
+            LogUtil.bizLog("Token信息:"+ ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY));
             ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();
 
@@ -110,7 +113,7 @@ public class QuartzJobFactory implements Job {
             history.setMessage(result.getMessage());
         } catch (Exception e) {
             String msg = String.format("执行[%s]异常！jobId:%s", scheduleJob.getName(), scheduleJob.getId());
-            LogUtil.error(msg, e);
+            LogUtil.error(msg+"；Token信息:"+ ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY), e);
             stopWatch.stop();
             history.setSuccessful(false);
             history.setMessage("作业执行失败！");
