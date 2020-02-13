@@ -100,7 +100,7 @@ public class QuartzJobFactory implements Job {
             // 设置当前执行任务的用户-全局管理员
             if (StringUtils.isNotBlank(getTenantCode()) && StringUtils.isNotBlank(getTenantAdmin())) {
                 // 设置默认的执行用户
-                MockUserHelper.mockUser(getTenantCode(), getTenantAdmin());
+                setToTenantAdmin();
             }
             ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();
