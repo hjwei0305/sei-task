@@ -1,13 +1,11 @@
 package com.changhong.sei.task.controller;
 
-import com.changhong.com.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobDao;
 import com.changhong.sei.task.dto.JobDto;
-import com.changhong.sei.task.entity.Job;
 import com.chonghong.sei.util.DateUtils;
-import net.bytebuddy.asm.Advice;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;

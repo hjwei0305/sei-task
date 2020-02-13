@@ -4,11 +4,11 @@ import com.changhong.sei.apitemplate.ApiTemplate;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.log.LogUtil;
-import com.changhong.sei.core.service.bo.OperateResult;
 import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
 import com.changhong.sei.utils.MockUserHelper;
+import com.chonghong.sei.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.DisallowConcurrentExecution;
@@ -64,11 +64,10 @@ public class QuartzJobFactory implements Job {
      * 执行配置的后台作业
      *
      * @param context 作业定义
-     * @throws JobExecutionException if there is an exception while executing the job.
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context) {
         com.changhong.sei.task.entity.Job scheduleJob = (com.changhong.sei.task.entity.Job) context.getMergedJobDataMap().get(SCHEDULER_KEY);
         if (Objects.isNull(scheduleJob)) {
             return;
@@ -77,7 +76,7 @@ public class QuartzJobFactory implements Job {
         com.changhong.sei.task.entity.Job job = new com.changhong.sei.task.entity.Job();
         job.setId(scheduleJob.getId());
         history.setJob(job);
-        Date date = new Date();
+        Date date = DateUtils.getCurrentDateTime();
         history.setStartTime(date);
         //定义执行时间记录
         StopWatch stopWatch = new StopWatch();
@@ -91,7 +90,7 @@ public class QuartzJobFactory implements Job {
             if (!StringUtils.isBlank(inputParam)) {
                 params = JsonUtils.fromJson(inputParam, Map.class);
             }
-            // 设置当前执行任务的用户-租户管理员
+            // 设置当前执行任务的用户-全局管理员
             if (StringUtils.isNotBlank(getTenantCode()) && StringUtils.isNotBlank(getTenantAdmin())) {
                 // 设置默认的执行用户
                 MockUserHelper.mockUser(getTenantCode(), getTenantAdmin());

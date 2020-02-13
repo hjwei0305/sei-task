@@ -1,7 +1,7 @@
 package com.changhong.sei.task.controller;
 
-import com.changhong.com.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JsonUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

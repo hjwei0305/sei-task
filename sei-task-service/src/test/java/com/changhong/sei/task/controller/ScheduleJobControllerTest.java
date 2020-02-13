@@ -1,15 +1,11 @@
 package com.changhong.sei.task.controller;
 
-import com.changhong.com.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JsonUtils;
-import com.changhong.sei.core.utils.ResultDataUtil;
-import com.changhong.sei.task.service.ScheduleJobService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.Assert.*;
 
 /**
  * 实现功能:
