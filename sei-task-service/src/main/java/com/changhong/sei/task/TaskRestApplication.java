@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @version 1.0.1 2019-12-18 10:41
  */
 @SpringBootApplication
-@EnableScheduling
 @EnableFeignClients(basePackages = {"com.changhong.sei.task.service.client"})
 public class TaskRestApplication extends SpringBootServletInitializer {
     /**

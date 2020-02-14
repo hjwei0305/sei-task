@@ -38,7 +38,7 @@ import java.util.Objects;
  */
 @DisallowConcurrentExecution
 @PersistJobDataAfterExecution
-public class QuartzJobFactory extends QuartzJobBean {
+public class QuartzJobFactory implements Job {
     /**
      * 调度任务的键值
      */
@@ -70,16 +70,27 @@ public class QuartzJobFactory extends QuartzJobBean {
     }
 
     /**
-     * Execute the actual job. The job data map will already have been
-     * applied as bean property values by execute. The contract is
-     * exactly the same as for the standard Quartz execute method.
-     * 执行配置的后台作业
-     * @param context 作业定义
-     * @see #execute
+     * <p>
+     * Called by the <code>{@link Scheduler}</code> when a <code>{@link Trigger}</code>
+     * fires that is associated with the <code>Job</code>.
+     * </p>
+     *
+     * <p>
+     * The implementation may wish to set a
+     * {@link JobExecutionContext#setResult(Object) result} object on the
+     * {@link JobExecutionContext} before this method exits.  The result itself
+     * is meaningless to Quartz, but may be informative to
+     * <code>{@link JobListener}s</code> or
+     * <code>{@link TriggerListener}s</code> that are watching the job's
+     * execution.
+     * </p>
+     *
+     * @param context
+     * @throws JobExecutionException if there is an exception while executing the job.
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    protected void executeInternal(JobExecutionContext context) {
+    public void execute(JobExecutionContext context) throws JobExecutionException {
         com.changhong.sei.task.entity.Job scheduleJob = (com.changhong.sei.task.entity.Job) context.getMergedJobDataMap().get(SCHEDULER_KEY);
         if (Objects.isNull(scheduleJob)) {
             return;
