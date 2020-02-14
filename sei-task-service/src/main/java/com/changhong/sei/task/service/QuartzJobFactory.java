@@ -14,10 +14,9 @@ import com.chonghong.sei.util.thread.ThreadLocalUtil;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.quartz.DisallowConcurrentExecution;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,8 @@ import java.util.Objects;
  * *************************************************************************************************
  */
 @DisallowConcurrentExecution
-public class QuartzJobFactory implements Job {
+@PersistJobDataAfterExecution
+public class QuartzJobFactory extends QuartzJobBean {
     /**
      * 调度任务的键值
      */
@@ -70,13 +70,16 @@ public class QuartzJobFactory implements Job {
     }
 
     /**
+     * Execute the actual job. The job data map will already have been
+     * applied as bean property values by execute. The contract is
+     * exactly the same as for the standard Quartz execute method.
      * 执行配置的后台作业
-     *
      * @param context 作业定义
+     * @see #execute
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void execute(JobExecutionContext context) {
+    protected void executeInternal(JobExecutionContext context) {
         com.changhong.sei.task.entity.Job scheduleJob = (com.changhong.sei.task.entity.Job) context.getMergedJobDataMap().get(SCHEDULER_KEY);
         if (Objects.isNull(scheduleJob)) {
             return;
@@ -94,7 +97,6 @@ public class QuartzJobFactory implements Job {
         try {
             // 初始化线程变量
             ThreadLocalHolder.begin();
-
             String path = String.format("%s/%s", scheduleJob.getApiPath(), scheduleJob.getMethodName());
             // 反序列化得到输入参数
             Map<String, String> params = null;
@@ -132,7 +134,6 @@ public class QuartzJobFactory implements Job {
                 String msg = String.format("保存作业执行历史异常：%s", JsonUtils.toJson(history));
                 LogUtil.error(msg, e);
             }
-
             // 释放线程变量
             ThreadLocalHolder.end();
         }
