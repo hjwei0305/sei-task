@@ -10,6 +10,7 @@ import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
 import com.chonghong.sei.util.DateUtils;
 import com.chonghong.sei.util.thread.ThreadLocalUtil;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.DisallowConcurrentExecution;
@@ -36,12 +37,7 @@ import java.util.Objects;
  * *************************************************************************************************
  */
 @DisallowConcurrentExecution
-@Component
 public class QuartzJobFactory implements Job {
-    @Autowired
-    private ApiTemplate apiTemplate;
-    @Autowired
-    private MockUser mockUser;
     /**
      * 调度任务的键值
      */
@@ -51,7 +47,7 @@ public class QuartzJobFactory implements Job {
      *
      * @return 租户代码
      */
-    public String getTenantCode() {
+    public static String getTenantCode() {
         return ContextUtil.getProperty("sei.default-tenant.code");
     }
 
@@ -60,14 +56,15 @@ public class QuartzJobFactory implements Job {
      *
      * @return 租户管理员
      */
-    public String getTenantAdmin() {
+    public static String getTenantAdmin() {
         return ContextUtil.getProperty("sei.default-tenant.admin");
     }
 
     /**
      * 设置当前用户为默认租户
      */
-    public void setToTenantAdmin(){
+    public static void setToTenantAdmin(){
+        MockUser mockUser = ContextUtil.getBean(MockUser.class);
         mockUser.mockUser(getTenantCode(), getTenantAdmin());
     }
 
@@ -108,6 +105,7 @@ public class QuartzJobFactory implements Job {
             }
             // 打印当前会话Token信息
             LogUtil.bizLog("Token信息:"+ ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY));
+            ApiTemplate apiTemplate = ContextUtil.getBean(ApiTemplate.class);
             ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();
 

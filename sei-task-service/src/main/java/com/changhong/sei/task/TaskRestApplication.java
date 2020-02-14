@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * <strong>实现功能:</strong>
@@ -13,6 +14,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @version 1.0.1 2019-12-18 10:41
  */
 @SpringBootApplication
+@EnableScheduling
 @EnableFeignClients(basePackages = {"com.changhong.sei.task.service.client"})
 public class TaskRestApplication extends SpringBootServletInitializer {
     /**
