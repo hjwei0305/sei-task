@@ -24,7 +24,6 @@ import java.util.Properties;
  * *************************************************************************************************
  */
 @Configuration
-@EnableScheduling
 public class QuartzConfiguration {
     @Autowired
     private DataSource dataSource;
@@ -57,6 +56,7 @@ public class QuartzConfiguration {
         prop.put("org.quartz.jobStore.tablePrefix", "QRTZ_");
         prop.put("org.quartz.jobStore.isClustered", "true");
         prop.put("org.quartz.jobStore.clusterCheckinInterval", "10000");
+        prop.put("org.quartz.jobStore.acquireTriggersWithinLock", "true");
 
         prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
         prop.put("org.quartz.threadPool.threadCount", "10");

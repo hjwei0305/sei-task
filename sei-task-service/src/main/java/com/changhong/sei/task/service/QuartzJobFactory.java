@@ -37,7 +37,6 @@ import java.util.Objects;
  * *************************************************************************************************
  */
 @DisallowConcurrentExecution
-@PersistJobDataAfterExecution
 public class QuartzJobFactory implements Job {
     /**
      * 调度任务的键值
