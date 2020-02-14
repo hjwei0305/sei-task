@@ -24,6 +24,8 @@ public class PlatformTaskControllerTest extends BaseUnitTest {
     private PlatformTaskController controller;
     @Autowired
     private ApiTemplate apiTemplate;
+    @Autowired
+    private QuartzJobFactory factory;
 
     @Test
     public void getInputParam() {
@@ -40,7 +42,7 @@ public class PlatformTaskControllerTest extends BaseUnitTest {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("id", "0002");
         params.put("code", "test-02");
-        QuartzJobFactory.setToTenantAdmin();
+        factory.setToTenantAdmin();
         System.out.println(ContextUtil.getSessionUser());
         ResultData resultData = apiTemplate.postByAppModuleCode("sei-task", "platformTask/getInputParam", ResultData.class, params);
         System.out.println(JsonUtils.toJson(resultData));

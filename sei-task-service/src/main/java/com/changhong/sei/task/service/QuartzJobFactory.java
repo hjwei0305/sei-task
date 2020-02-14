@@ -2,12 +2,12 @@ package com.changhong.sei.task.service;
 
 import com.changhong.sei.apitemplate.ApiTemplate;
 import com.changhong.sei.core.context.ContextUtil;
+import com.changhong.sei.core.context.mock.MockUser;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
-import com.changhong.sei.utils.MockUserHelper;
 import com.chonghong.sei.util.DateUtils;
 import com.chonghong.sei.util.thread.ThreadLocalUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +15,8 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -36,9 +36,12 @@ import java.util.Objects;
  * *************************************************************************************************
  */
 @DisallowConcurrentExecution
+@Component
 public class QuartzJobFactory implements Job {
     @Autowired
     private ApiTemplate apiTemplate;
+    @Autowired
+    private MockUser mockUser;
     /**
      * 调度任务的键值
      */
@@ -48,7 +51,7 @@ public class QuartzJobFactory implements Job {
      *
      * @return 租户代码
      */
-    public static String getTenantCode() {
+    public String getTenantCode() {
         return ContextUtil.getProperty("sei.default-tenant.code");
     }
 
@@ -57,15 +60,15 @@ public class QuartzJobFactory implements Job {
      *
      * @return 租户管理员
      */
-    public static String getTenantAdmin() {
+    public String getTenantAdmin() {
         return ContextUtil.getProperty("sei.default-tenant.admin");
     }
 
     /**
      * 设置当前用户为默认租户
      */
-    public static void setToTenantAdmin(){
-        MockUserHelper.mockUser(getTenantCode(), getTenantAdmin());
+    public void setToTenantAdmin(){
+        mockUser.mockUser(getTenantCode(), getTenantAdmin());
     }
 
     /**
