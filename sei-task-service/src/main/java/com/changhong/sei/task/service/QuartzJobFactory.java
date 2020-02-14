@@ -9,6 +9,7 @@ import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
 import com.chonghong.sei.util.DateUtils;
+import com.chonghong.sei.util.thread.ThreadLocalHolder;
 import com.chonghong.sei.util.thread.ThreadLocalUtil;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
@@ -91,6 +92,9 @@ public class QuartzJobFactory implements Job {
         stopWatch.start();
         LogUtil.bizLog("{} 任务开始执行 start", scheduleJob.getName());
         try {
+            // 初始化线程变量
+            ThreadLocalHolder.begin();
+
             String path = String.format("%s/%s", scheduleJob.getApiPath(), scheduleJob.getMethodName());
             // 反序列化得到输入参数
             Map<String, String> params = null;
@@ -119,14 +123,18 @@ public class QuartzJobFactory implements Job {
             history.setSuccessful(false);
             history.setMessage("作业执行失败！");
             history.setExceptionMessage(msg);
-        }
-        history.setElapsed(stopWatch.getTime());
-        try {
-            JobHistoryDao jobHistoryDao = ContextUtil.getBean(JobHistoryDao.class);
-            jobHistoryDao.save(history);
-        } catch (Exception e) {
-            String msg = String.format("保存作业执行历史异常：%s", JsonUtils.toJson(history));
-            LogUtil.error(msg, e);
+        } finally {
+            history.setElapsed(stopWatch.getTime());
+            try {
+                JobHistoryDao jobHistoryDao = ContextUtil.getBean(JobHistoryDao.class);
+                jobHistoryDao.save(history);
+            } catch (Exception e) {
+                String msg = String.format("保存作业执行历史异常：%s", JsonUtils.toJson(history));
+                LogUtil.error(msg, e);
+            }
+
+            // 释放线程变量
+            ThreadLocalHolder.end();
         }
     }
 }
