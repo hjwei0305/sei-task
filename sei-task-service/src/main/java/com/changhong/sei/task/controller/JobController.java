@@ -10,6 +10,7 @@ import com.changhong.sei.task.api.JobApi;
 import com.changhong.sei.task.dto.JobDto;
 import com.changhong.sei.task.entity.Job;
 import com.changhong.sei.task.service.JobService;
+import com.changhong.sei.task.util.CronUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -98,5 +99,16 @@ public class JobController implements DefaultBaseEntityController<Job, JobDto>,
         // 转换为entity
         Job job = convertToEntity(jobDto);
         return ResultDataUtil.convertFromOperateResult(service.addJob(job));
+    }
+
+    /**
+     * 获取最近十次的执行时间
+     *
+     * @param cron Cron表达式
+     * @return 执行时间清单
+     */
+    @Override
+    public ResultData<List<String>> getRecentTriggerTimes(String cron) {
+        return ResultData.success(CronUtil.getRecentTriggerTime(cron, 10));
     }
 }

@@ -70,4 +70,11 @@ public class JobControllerTest extends BaseUnitTest {
         Assert.assertTrue(result.successful());
         System.out.println(JsonUtils.toJson(result.getData()));
     }
+
+    @Test
+    public void getRecentTriggerTimes() {
+        String cron = "0 0/30 * * * ? *";
+        ResultData resultData = controller.getRecentTriggerTimes(cron);
+        System.out.println(JsonUtils.toJson(resultData));
+    }
 }
