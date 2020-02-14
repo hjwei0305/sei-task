@@ -12,6 +12,7 @@ import com.chonghong.sei.util.DateUtils;
 import com.chonghong.sei.util.thread.ThreadLocalHolder;
 import com.chonghong.sei.util.thread.ThreadLocalUtil;
 import io.swagger.annotations.Api;
+import net.bytebuddy.asm.Advice;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.*;
@@ -36,8 +37,13 @@ import java.util.Objects;
  * <p/>
  * *************************************************************************************************
  */
+@Component
 @DisallowConcurrentExecution
-public class QuartzJobFactory implements Job {
+public class QuartzJobFactory extends QuartzJobBean {
+    @Autowired
+    private MockUser mockUser;
+    @Autowired
+    private ApiTemplate apiTemplate;
     /**
      * 调度任务的键值
      */
@@ -63,33 +69,21 @@ public class QuartzJobFactory implements Job {
     /**
      * 设置当前用户为默认租户
      */
-    public static void setToTenantAdmin(){
-        MockUser mockUser = ContextUtil.getBean(MockUser.class);
+    public void setToTenantAdmin(){
         mockUser.mockUser(getTenantCode(), getTenantAdmin());
     }
 
     /**
-     * <p>
-     * Called by the <code>{@link Scheduler}</code> when a <code>{@link Trigger}</code>
-     * fires that is associated with the <code>Job</code>.
-     * </p>
+     * Execute the actual job. The job data map will already have been
+     * applied as bean property values by execute. The contract is
+     * exactly the same as for the standard Quartz execute method.
      *
-     * <p>
-     * The implementation may wish to set a
-     * {@link JobExecutionContext#setResult(Object) result} object on the
-     * {@link JobExecutionContext} before this method exits.  The result itself
-     * is meaningless to Quartz, but may be informative to
-     * <code>{@link JobListener}s</code> or
-     * <code>{@link TriggerListener}s</code> that are watching the job's
-     * execution.
-     * </p>
-     *
-     * @param context
-     * @throws JobExecutionException if there is an exception while executing the job.
+     * @param context 执行的任务上下文
+     * @see #execute
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    protected void executeInternal(JobExecutionContext context) {
         com.changhong.sei.task.entity.Job scheduleJob = (com.changhong.sei.task.entity.Job) context.getMergedJobDataMap().get(SCHEDULER_KEY);
         if (Objects.isNull(scheduleJob)) {
             return;
@@ -119,9 +113,6 @@ public class QuartzJobFactory implements Job {
                 // 设置默认的执行用户
                 setToTenantAdmin();
             }
-            // 打印当前会话Token信息
-            LogUtil.bizLog("Token信息:"+ ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY));
-            ApiTemplate apiTemplate = ContextUtil.getBean(ApiTemplate.class);
             ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();
 

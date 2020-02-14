@@ -22,6 +22,8 @@ import java.util.Map;
 public class PlatformTaskControllerTest extends BaseUnitTest {
     @Autowired
     private PlatformTaskController controller;
+    @Autowired
+    private QuartzJobFactory jobFactory;
 
     @Test
     public void getInputParam() {
@@ -38,7 +40,7 @@ public class PlatformTaskControllerTest extends BaseUnitTest {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("id", "0002");
         params.put("code", "test-02");
-        QuartzJobFactory.setToTenantAdmin();
+        jobFactory.setToTenantAdmin();
         System.out.println(ContextUtil.getSessionUser());
         ApiTemplate apiTemplate = ContextUtil.getBean(ApiTemplate.class);
         ResultData resultData = apiTemplate.postByAppModuleCode("sei-task", "platformTask/getInputParam", ResultData.class, params);
