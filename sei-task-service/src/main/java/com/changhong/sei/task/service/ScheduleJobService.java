@@ -6,7 +6,7 @@ import com.changhong.sei.task.dao.JobDao;
 import com.changhong.sei.task.dto.JobState;
 import com.changhong.sei.task.dto.JobTrigger;
 import com.changhong.sei.task.entity.Job;
-import com.chonghong.sei.util.EnumUtils;
+import com.changhong.sei.util.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;

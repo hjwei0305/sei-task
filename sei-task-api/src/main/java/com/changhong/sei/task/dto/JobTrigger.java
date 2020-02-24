@@ -1,6 +1,6 @@
 package com.changhong.sei.task.dto;
 
-import com.chonghong.sei.util.EnumUtils;
+import com.changhong.sei.util.EnumUtils;
 
 import java.io.Serializable;
 import java.util.Date;

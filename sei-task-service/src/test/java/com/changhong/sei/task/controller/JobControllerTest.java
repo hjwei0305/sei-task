@@ -5,7 +5,7 @@ import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobDao;
 import com.changhong.sei.task.dto.JobDto;
-import com.chonghong.sei.util.DateUtils;
+import com.changhong.sei.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
