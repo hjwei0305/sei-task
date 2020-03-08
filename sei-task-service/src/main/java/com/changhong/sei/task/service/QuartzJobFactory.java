@@ -126,7 +126,7 @@ public class QuartzJobFactory extends QuartzJobBean {
                 asyncRunUtil.runAsync(() -> {
                     apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, inputParams);
                 });
-                result = ResultData.success("任务【"+scheduleJob.getName()+"】已提交后台异步执行。");
+                result = ResultData.success("任务【"+scheduleJob.getName()+"】已提交后台异步执行。", null);
             } else {
                 result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             }
