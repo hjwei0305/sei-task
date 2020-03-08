@@ -26,6 +26,7 @@ import javax.persistence.*;
 @DynamicUpdate
 public class Job extends BaseAuditableEntity {
 
+    private static final long serialVersionUID = 8086087237212578900L;
     /**
      * 名称
      */
