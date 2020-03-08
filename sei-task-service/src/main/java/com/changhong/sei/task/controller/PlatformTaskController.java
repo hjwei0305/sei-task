@@ -1,6 +1,8 @@
 package com.changhong.sei.task.controller;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.task.api.PlatformTaskApi;
 import io.swagger.annotations.Api;
@@ -31,6 +33,8 @@ public class PlatformTaskController implements PlatformTaskApi {
         String id = params.get("id");
         String code = params.get("code");
         // 获取的输入参数为：id={0},code={1}
+        // 打印输出当前用户
+        LogUtil.bizLog("后台任务由【{}】执行完成！", ContextUtil.getSessionUser());
         return ResultDataUtil.success(params, "00013", id, code);
     }
 }
