@@ -59,7 +59,7 @@ public class JobDto extends BaseEntityDto {
     /**
      * 输入参数
      */
-    @ApiModelProperty(value = "输入参数(Map的Json字符串)", required = true)
+    @ApiModelProperty(value = "输入参数(Map的Json字符串)")
     private String inputParam;
 
     /**
@@ -91,6 +91,25 @@ public class JobDto extends BaseEntityDto {
     @NotNull
     @ApiModelProperty(value = "是否禁用", required = true)
     private Boolean disable = Boolean.FALSE;
+
+    /**
+     * 执行人租户代码
+     */
+    @ApiModelProperty(value = "执行人租户代码")
+    private String exeTenantCode;
+
+    /**
+     * 执行人账号
+     */
+    @ApiModelProperty(value = "执行人账号")
+    private String exeAccount;
+
+    /**
+     * 异步执行
+     */
+    @NotNull
+    @ApiModelProperty(value = "异步执行", required = true)
+    private Boolean asyncExe = Boolean.FALSE;
 
     /**
      * 已过期
@@ -184,5 +203,29 @@ public class JobDto extends BaseEntityDto {
 
     public void setExpired(Boolean expired) {
         this.expired = expired;
+    }
+
+    public String getExeTenantCode() {
+        return exeTenantCode;
+    }
+
+    public void setExeTenantCode(String exeTenantCode) {
+        this.exeTenantCode = exeTenantCode;
+    }
+
+    public String getExeAccount() {
+        return exeAccount;
+    }
+
+    public void setExeAccount(String exeAccount) {
+        this.exeAccount = exeAccount;
+    }
+
+    public Boolean getAsyncExe() {
+        return asyncExe;
+    }
+
+    public void setAsyncExe(Boolean asyncExe) {
+        this.asyncExe = asyncExe;
     }
 }

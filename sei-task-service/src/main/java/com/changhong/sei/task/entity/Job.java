@@ -21,7 +21,7 @@ import javax.persistence.*;
  */
 @Access(AccessType.FIELD)
 @Entity
-@Table(name="job")
+@Table(name = "job")
 @DynamicInsert
 @DynamicUpdate
 public class Job extends BaseAuditableEntity {
@@ -29,62 +29,80 @@ public class Job extends BaseAuditableEntity {
     /**
      * 名称
      */
-    @Column(name = "name",length = 50, nullable = false)
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
     /**
      * 应用模块代码
      */
-    @Column(name = "app_module_code",length = 20, nullable = false)
+    @Column(name = "app_module_code", length = 20, nullable = false)
     private String appModuleCode;
 
     /**
      * 应用模块名称
      */
-    @Column(name = "app_module_name",length = 30, nullable = false)
+    @Column(name = "app_module_name", length = 30, nullable = false)
     private String appModuleName;
 
     /**
      * API服务路径
      */
-    @Column(name = "api_path",length = 100, nullable = false)
+    @Column(name = "api_path", length = 100, nullable = false)
     private String apiPath;
 
     /**
      * API服务方法名
      */
-    @Column(name = "method_name",length = 100, nullable = false)
+    @Column(name = "method_name", length = 100, nullable = false)
     private String methodName;
 
     /**
      * 输入参数
      */
-    @Column(name = "input_param",length = 1000)
+    @Column(name = "input_param", length = 1000)
     private String inputParam;
 
     /**
      * CRON表达式
      */
-    @Column(name = "cron_exp",length = 50, nullable = false)
+    @Column(name = "cron_exp", length = 50, nullable = false)
     private String cronExp;
 
     /**
      * 作业说明
      */
-    @Column(name = "remark",length = 200, nullable = false)
+    @Column(name = "remark", length = 200, nullable = false)
     private String remark;
 
     /**
      * 超时时间（秒）默认180秒
      */
-    @Column(name = "time_out",nullable = false)
+    @Column(name = "time_out", nullable = false)
     private Integer timeOut = 180;
 
     /**
      * 禁用
      */
-    @Column(name = "disable",nullable = false)
+    @Column(name = "disable", nullable = false)
     private Boolean disable = Boolean.FALSE;
+
+    /**
+     * 执行人租户代码
+     */
+    @Column(name = "exe_tenant_code", length = 10)
+    private String exeTenantCode;
+
+    /**
+     * 执行人账号
+     */
+    @Column(name = "exe_account", length = 50)
+    private String exeAccount;
+
+    /**
+     * 异步执行
+     */
+    @Column(name = "async_exe", nullable = false)
+    private Boolean asyncExe = Boolean.FALSE;
 
     /**
      * 已过期
@@ -179,5 +197,29 @@ public class Job extends BaseAuditableEntity {
 
     public void setExpired(Boolean expired) {
         this.expired = expired;
+    }
+
+    public String getExeTenantCode() {
+        return exeTenantCode;
+    }
+
+    public void setExeTenantCode(String exeTenantCode) {
+        this.exeTenantCode = exeTenantCode;
+    }
+
+    public String getExeAccount() {
+        return exeAccount;
+    }
+
+    public void setExeAccount(String exeAccount) {
+        this.exeAccount = exeAccount;
+    }
+
+    public Boolean getAsyncExe() {
+        return asyncExe;
+    }
+
+    public void setAsyncExe(Boolean asyncExe) {
+        this.asyncExe = asyncExe;
     }
 }

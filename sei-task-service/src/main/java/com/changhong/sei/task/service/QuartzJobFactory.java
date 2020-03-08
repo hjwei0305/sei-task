@@ -11,8 +11,7 @@ import com.changhong.sei.task.entity.JobHistory;
 import com.changhong.sei.util.DateUtils;
 import com.changhong.sei.util.thread.ThreadLocalHolder;
 import com.changhong.sei.util.thread.ThreadLocalUtil;
-import io.swagger.annotations.Api;
-import net.bytebuddy.asm.Advice;
+import com.changhong.sei.utils.AsyncRunUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.*;
@@ -44,10 +43,13 @@ public class QuartzJobFactory extends QuartzJobBean {
     private MockUser mockUser;
     @Autowired
     private ApiTemplate apiTemplate;
+    @Autowired
+    private AsyncRunUtil asyncRunUtil;
     /**
      * 调度任务的键值
      */
     public static final String SCHEDULER_KEY = "scheduleJob";
+
     /**
      * 获取默认租户代码
      *
@@ -67,10 +69,16 @@ public class QuartzJobFactory extends QuartzJobBean {
     }
 
     /**
-     * 设置当前用户为默认租户
+     * 设置执行任务的用户
      */
-    public void setToTenantAdmin(){
-        mockUser.mockUser(getTenantCode(), getTenantAdmin());
+    public void setToTenantAdmin(String tenantCode, String account) {
+        if (StringUtils.isNotBlank(tenantCode) && StringUtils.isNotBlank(account)) {
+            mockUser.mockUser(tenantCode, account);
+            return;
+        }
+        if (StringUtils.isNotBlank(getTenantCode()) && StringUtils.isNotBlank(getTenantAdmin())) {
+            mockUser.mockUser(getTenantCode(), getTenantAdmin());
+        }
     }
 
     /**
@@ -108,20 +116,27 @@ public class QuartzJobFactory extends QuartzJobBean {
             if (!StringUtils.isBlank(inputParam)) {
                 params = JsonUtils.fromJson(inputParam, Map.class);
             }
-            // 设置当前执行任务的用户-全局管理员
-            if (StringUtils.isNotBlank(getTenantCode()) && StringUtils.isNotBlank(getTenantAdmin())) {
-                // 设置默认的执行用户
-                setToTenantAdmin();
+            // 确定任务执行的输入参数
+            final Map<String, String> inputParams = params;
+            // 设置任务执行用户
+            setToTenantAdmin(scheduleJob.getExeTenantCode(), scheduleJob.getExeAccount());
+            // 判断是否为异步执行
+            ResultData result;
+            if (scheduleJob.getAsyncExe()) {
+                asyncRunUtil.runAsync(() -> {
+                    apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, inputParams);
+                });
+                result = ResultData.success("任务【"+scheduleJob.getName()+"】已提交后台异步执行。");
+            } else {
+                result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             }
-            ResultData result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
             stopWatch.stop();
-
             LogUtil.bizLog("{} 任务执行完成 end", scheduleJob.getName());
             history.setSuccessful(result.successful());
             history.setMessage(result.getMessage());
         } catch (Exception e) {
             String msg = String.format("执行[%s]异常！jobId:%s", scheduleJob.getName(), scheduleJob.getId());
-            LogUtil.error(msg+"；Token信息:"+ ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY), e);
+            LogUtil.error(msg + "；Token信息:" + ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY), e);
             stopWatch.stop();
             history.setSuccessful(false);
             history.setMessage("作业执行失败！");
