@@ -111,13 +111,13 @@ public class QuartzJobFactory extends QuartzJobBean {
             ThreadLocalHolder.begin();
             String path = String.format("%s/%s", scheduleJob.getApiPath(), scheduleJob.getMethodName());
             // 反序列化得到输入参数
-            Map<String, String> params = null;
+            Map<String, Object> params = null;
             String inputParam = scheduleJob.getInputParam();
             if (!StringUtils.isBlank(inputParam)) {
                 params = JsonUtils.fromJson(inputParam, Map.class);
             }
             // 确定任务执行的输入参数
-            final Map<String, String> inputParams = params;
+            final Map<String, Object> inputParams = params;
             // 设置任务执行用户
             setToTenantAdmin(scheduleJob.getExeTenantCode(), scheduleJob.getExeAccount());
             // 判断是否为异步执行
@@ -128,7 +128,7 @@ public class QuartzJobFactory extends QuartzJobBean {
                 });
                 result = ResultData.success("任务【"+scheduleJob.getName()+"】已提交后台异步执行。", null);
             } else {
-                result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, params);
+                result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, inputParams);
             }
             stopWatch.stop();
             LogUtil.bizLog("{} 任务执行完成 end", scheduleJob.getName());
