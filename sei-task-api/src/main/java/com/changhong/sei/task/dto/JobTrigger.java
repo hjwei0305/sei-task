@@ -1,6 +1,8 @@
 package com.changhong.sei.task.dto;
 
-import com.changhong.sei.util.EnumUtils;
+import com.changhong.sei.core.dto.serializer.EnumJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,6 +19,7 @@ import java.util.Date;
  * <p/>
  * *************************************************************************************************
  */
+@ApiModel("调度器中的任务")
 public class JobTrigger implements Serializable {
     /**
      * Id标识
@@ -33,11 +36,8 @@ public class JobTrigger implements Serializable {
     /**
      * 作业状态
      */
+    @JsonSerialize(using = EnumJsonSerializer.class)
     private JobState state;
-    /**
-     * 作业状态说明
-     */
-    private String stateRemark;
     /**
      * 下一次执行时间
      */
@@ -105,13 +105,5 @@ public class JobTrigger implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getStateRemark() {
-        return EnumUtils.getEnumItemRemark(JobState.class,state);
-    }
-
-    public void setStateRemark(String stateRemark) {
-        this.stateRemark = stateRemark;
     }
 }
