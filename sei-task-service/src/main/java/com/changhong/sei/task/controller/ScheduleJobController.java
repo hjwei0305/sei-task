@@ -42,7 +42,7 @@ public class ScheduleJobController implements ScheduleJobApi {
      * @return 操作结果
      */
     @Override
-    public ResultData pauseJob(String id) {
+    public ResultData<?> pauseJob(String id) {
         return ResultDataUtil.convertFromOperateResult(service.pauseJob(id));
     }
 
@@ -53,7 +53,7 @@ public class ScheduleJobController implements ScheduleJobApi {
      * @return 操作结果
      */
     @Override
-    public ResultData resumeJob(String id) {
+    public ResultData<?> resumeJob(String id) {
         return ResultDataUtil.convertFromOperateResult(service.resumeJob(id));
     }
 
@@ -64,7 +64,7 @@ public class ScheduleJobController implements ScheduleJobApi {
      * @return 操作结果
      */
     @Override
-    public ResultData triggerJob(String id) {
+    public ResultData<?> triggerJob(String id) {
         return ResultDataUtil.convertFromOperateResult(service.triggerJob(id));
     }
 
@@ -75,7 +75,7 @@ public class ScheduleJobController implements ScheduleJobApi {
      * @return 操作结果
      */
     @Override
-    public ResultData rescheduleJob(String id) {
+    public ResultData<?> rescheduleJob(String id) {
         return ResultDataUtil.convertFromOperateResult(service.rescheduleJob(id));
     }
 
@@ -86,7 +86,7 @@ public class ScheduleJobController implements ScheduleJobApi {
      * @return 操作结果
      */
     @Override
-    public ResultData addJob(String id) {
+    public ResultData<?> addJob(String id) {
         return ResultDataUtil.convertFromOperateResult(service.addJob(id));
     }
 
@@ -97,7 +97,7 @@ public class ScheduleJobController implements ScheduleJobApi {
      * @return 操作结果
      */
     @Override
-    public ResultData removeJob(String id) {
+    public ResultData<?> removeJob(String id) {
         return ResultDataUtil.convertFromOperateResult(service.removeJob(id));
     }
 }

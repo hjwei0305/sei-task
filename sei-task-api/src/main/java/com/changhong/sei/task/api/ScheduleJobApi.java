@@ -33,7 +33,7 @@ public interface ScheduleJobApi {
      */
     @PostMapping(path = "pauseJob/{id}")
     @ApiOperation(value = "暂停一个作业",notes = "在调度器中暂停一个作业")
-    ResultData pauseJob(@PathVariable("id") String id);
+    ResultData<?> pauseJob(@PathVariable("id") String id);
 
     /**
      * 唤醒一个作业
@@ -42,7 +42,7 @@ public interface ScheduleJobApi {
      */
     @PostMapping(path = "resumeJob/{id}")
     @ApiOperation(value = "唤醒一个作业",notes = "在调度器中唤醒一个暂停的作业")
-    ResultData resumeJob(@PathVariable("id") String id);
+    ResultData<?> resumeJob(@PathVariable("id") String id);
 
     /**
      * 立即执行一个已经调度的作业
@@ -51,7 +51,7 @@ public interface ScheduleJobApi {
      */
     @PostMapping(path = "triggerJob/{id}")
     @ApiOperation(value = "立即执行一个后台作业",notes = "立即执行一个已经调度的作业")
-    ResultData triggerJob(@PathVariable("id") String id);
+    ResultData<?> triggerJob(@PathVariable("id") String id);
 
     /**
      * 更新作业的调度周期表达式
@@ -60,7 +60,7 @@ public interface ScheduleJobApi {
      */
     @PostMapping(path = "rescheduleJob/{id}")
     @ApiOperation(value = "更新作业的调度周期表达式",notes = "在调度器中更新作业的调度周期表达式")
-    ResultData rescheduleJob(@PathVariable("id") String id);
+    ResultData<?> rescheduleJob(@PathVariable("id") String id);
 
     /**
      * 添加一个作业到调度器中
@@ -69,7 +69,7 @@ public interface ScheduleJobApi {
      */
     @PostMapping(path = "addJob/{id}")
     @ApiOperation(value = "添加一个作业到调度器中",notes = "添加一个新的后台作业到调度器中")
-    ResultData addJob(@PathVariable("id") String id);
+    ResultData<?> addJob(@PathVariable("id") String id);
 
     /**
      * 从调度器中移除一个作业
@@ -78,5 +78,5 @@ public interface ScheduleJobApi {
      */
     @PostMapping(path = "removeJob/{id}")
     @ApiOperation(value = "从调度器中移除一个作业",notes = "从调度器中移除一个后台作业")
-    ResultData removeJob(@PathVariable("id") String id);
+    ResultData<?> removeJob(@PathVariable("id") String id);
 }
