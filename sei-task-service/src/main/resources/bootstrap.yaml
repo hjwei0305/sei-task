@@ -1,23 +1,34 @@
-spring:
+sei: # 应用全局配置
   application:
-    name: sei-task
-  cloud:
-    bus:
-      trace:
-        enabled: true
-      enabled: true
-    config:
-      uri: http://10.4.208.86:8100/config-center
-      profile: DEV
-      name: ${spring.application.name}
-    zookeeper:
-      # zk 地址
-      connect-string: 10.4.208.132:2181
-      # 关闭zk可用不用依赖zk
-      enabled: true
-
-sei:
+    code: sei-task
+    name: 后台作业服务
+    env: DEV
+    version: 6.0.2
+    swagger:
+      title: "${sei.application.name} API"
+      description: "${sei.application.name} 的API文档，运行环境: ${sei.application.env}"
+      version: ${sei.application.version}
+    # 在SEI3.0兼容模式升级项目中需要配置为true
+    # compatible: false
   mock: # 本地调试的当前用户配置
     user:
       tenant-code: 10044
       account: admin
+
+spring:
+  application:
+    name: ${sei.application.code}
+  cloud:
+    bus: # 启用平台的配置中心
+      trace:
+        enabled: true
+      enabled: true
+    config: # 配置中心地址
+      uri: http://10.4.208.86:8100/config-center
+      profile: ${sei.application.env} #当前环境
+      name: ${spring.application.name}
+    zookeeper: #启用平台注册发现
+      # zk地址
+      connect-string: 10.4.208.132:2181
+      # 关闭zk可用不用依赖平台注册中心
+      enabled: true

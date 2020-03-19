@@ -1,6 +1,6 @@
 package com.changhong.sei.task.controller;
 
-import com.changhong.sei.core.controller.DefaultBaseEntityController;
+import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
@@ -28,8 +28,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "job", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "JobApi", tags = "后台作业API服务")
-public class JobController implements DefaultBaseEntityController<Job, JobDto>,
-        JobApi {
+public class JobController extends BaseEntityController<Job, JobDto>
+        implements JobApi {
     @Autowired
     private JobService service;
     /**
@@ -66,26 +66,6 @@ public class JobController implements DefaultBaseEntityController<Job, JobDto>,
     @Override
     public BaseEntityService<Job> getService() {
         return service;
-    }
-
-    /**
-     * 获取数据实体的类型
-     *
-     * @return 类型Class
-     */
-    @Override
-    public Class<Job> getEntityClass() {
-        return Job.class;
-    }
-
-    /**
-     * 获取传输实体的类型
-     *
-     * @return 类型Class
-     */
-    @Override
-    public Class<JobDto> getDtoClass() {
-        return JobDto.class;
     }
 
     /**
