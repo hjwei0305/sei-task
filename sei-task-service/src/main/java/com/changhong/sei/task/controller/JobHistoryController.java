@@ -1,5 +1,6 @@
 package com.changhong.sei.task.controller;
 
+import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.controller.DefaultBaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
@@ -24,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "jobHistory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "JobHistoryApi", tags = "后台作业执行历史")
-public class JobHistoryController implements DefaultBaseEntityController<JobHistory, JobHistoryDto>,
-        JobHistoryApi {
+public class JobHistoryController extends BaseEntityController<JobHistory, JobHistoryDto>
+        implements JobHistoryApi {
     @Autowired
     private JobHistoryService service;
     /**
@@ -42,25 +43,5 @@ public class JobHistoryController implements DefaultBaseEntityController<JobHist
     @Override
     public BaseEntityService<JobHistory> getService() {
         return service;
-    }
-
-    /**
-     * 获取数据实体的类型
-     *
-     * @return 类型Class
-     */
-    @Override
-    public Class<JobHistory> getEntityClass() {
-        return JobHistory.class;
-    }
-
-    /**
-     * 获取传输实体的类型
-     *
-     * @return 类型Class
-     */
-    @Override
-    public Class<JobHistoryDto> getDtoClass() {
-        return JobHistoryDto.class;
     }
 }

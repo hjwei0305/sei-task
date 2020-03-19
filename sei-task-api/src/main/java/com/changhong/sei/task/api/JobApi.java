@@ -33,7 +33,7 @@ public interface JobApi extends BaseEntityApi<JobDto>,
      */
     @PostMapping(path = "addJob", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加一个作业到调度器中", notes = "创建一个作业，并添加到调度器启动")
-    ResultData addJob(@RequestBody JobDto jobDto);
+    ResultData<?> addJob(@RequestBody JobDto jobDto);
 
     /**
      * 获取最近十次的执行时间

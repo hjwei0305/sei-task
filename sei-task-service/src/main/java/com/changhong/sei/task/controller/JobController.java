@@ -75,7 +75,7 @@ public class JobController extends BaseEntityController<Job, JobDto>
      * @return 操作结果
      */
     @Override
-    public ResultData addJob(JobDto jobDto) {
+    public ResultData<?> addJob(JobDto jobDto) {
         // 转换为entity
         Job job = convertToEntity(jobDto);
         return ResultDataUtil.convertFromOperateResult(service.addJob(job));
