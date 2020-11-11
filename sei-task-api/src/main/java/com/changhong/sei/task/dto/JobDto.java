@@ -112,6 +112,12 @@ public class JobDto extends BaseEntityDto {
     private Boolean asyncExe = Boolean.FALSE;
 
     /**
+     * 异常通知邮箱
+     */
+    @ApiModelProperty(value = "异常通知邮箱")
+    private String errorNotifyEmail;
+
+    /**
      * 已过期
      */
     @ApiModelProperty(value = "已过期(传输属性)")
@@ -227,5 +233,13 @@ public class JobDto extends BaseEntityDto {
 
     public void setAsyncExe(Boolean asyncExe) {
         this.asyncExe = asyncExe;
+    }
+
+    public String getErrorNotifyEmail() {
+        return errorNotifyEmail;
+    }
+
+    public void setErrorNotifyEmail(String errorNotifyEmail) {
+        this.errorNotifyEmail = errorNotifyEmail;
     }
 }
