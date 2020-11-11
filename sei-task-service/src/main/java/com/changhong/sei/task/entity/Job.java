@@ -106,6 +106,12 @@ public class Job extends BaseAuditableEntity {
     private Boolean asyncExe = Boolean.FALSE;
 
     /**
+     * 异常通知邮箱
+     */
+    @Column(name = "error_notify_email")
+    private String errorNotifyEmail;
+
+    /**
      * 已过期
      */
     @Transient
@@ -222,5 +228,13 @@ public class Job extends BaseAuditableEntity {
 
     public void setAsyncExe(Boolean asyncExe) {
         this.asyncExe = asyncExe;
+    }
+
+    public String getErrorNotifyEmail() {
+        return errorNotifyEmail;
+    }
+
+    public void setErrorNotifyEmail(String errorNotifyEmail) {
+        this.errorNotifyEmail = errorNotifyEmail;
     }
 }

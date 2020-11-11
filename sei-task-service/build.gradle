@@ -11,6 +11,7 @@ ext {
 dependencies {
     compile project(':sei-task-api')
     compile("com.changhong.sei:sei-service-starter:$sei_version")
+    compile("com.changhong.sei:sei-notify-sdk:$sei_version")
     compile("mysql:mysql-connector-java:$mysqlVersion")
     compile("org.springframework.boot:spring-boot-starter-quartz")
 
