@@ -8,6 +8,7 @@ import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.util.JsonUtils;
 import com.changhong.sei.task.dao.JobHistoryDao;
 import com.changhong.sei.task.entity.JobHistory;
+import com.changhong.sei.task.service.manager.ErrorNotifyManager;
 import com.changhong.sei.util.DateUtils;
 import com.changhong.sei.util.thread.ThreadLocalHolder;
 import com.changhong.sei.util.thread.ThreadLocalUtil;
@@ -45,6 +46,8 @@ public class QuartzJobFactory extends QuartzJobBean {
     private ApiTemplate apiTemplate;
     @Autowired
     private AsyncRunUtil asyncRunUtil;
+    @Autowired
+    private ErrorNotifyManager errorNotifyManager;
     /**
      * 调度任务的键值
      */
@@ -126,7 +129,7 @@ public class QuartzJobFactory extends QuartzJobBean {
                 asyncRunUtil.runAsync(() -> {
                     apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, inputParams);
                 });
-                result = ResultData.success("任务【"+scheduleJob.getName()+"】已提交后台异步执行。", null);
+                result = ResultData.success("任务【" + scheduleJob.getName() + "】已提交后台异步执行。", null);
             } else {
                 result = apiTemplate.postByAppModuleCode(scheduleJob.getAppModuleCode(), path, ResultData.class, inputParams);
             }
@@ -134,6 +137,10 @@ public class QuartzJobFactory extends QuartzJobBean {
             LogUtil.bizLog("{} 任务执行完成 end", scheduleJob.getName());
             history.setSuccessful(result.successful());
             history.setMessage(result.getMessage());
+            // 发送通知邮件
+            if (result.failed()) {
+                errorNotifyManager.sendEmail(scheduleJob, result.getMessage(), null);
+            }
         } catch (Exception e) {
             String msg = String.format("执行[%s]异常！jobId:%s", scheduleJob.getName(), scheduleJob.getId());
             LogUtil.error(msg + "；Token信息:" + ThreadLocalUtil.getTranVar(ContextUtil.HEADER_TOKEN_KEY), e);
@@ -141,6 +148,8 @@ public class QuartzJobFactory extends QuartzJobBean {
             history.setSuccessful(false);
             history.setMessage("作业执行失败！");
             history.setExceptionMessage(msg);
+            // 发送通知邮件
+            errorNotifyManager.sendEmail(scheduleJob, msg, e);
         } finally {
             history.setElapsed(stopWatch.getTime());
             try {
