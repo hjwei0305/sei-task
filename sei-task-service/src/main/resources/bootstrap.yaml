@@ -3,7 +3,7 @@ sei: # 应用全局配置
     code: sei-task
     name: 后台作业服务
     env: DEV
-    version: 6.0.2
+    version: '@project_version@'
     swagger:
       title: "${sei.application.name} API"
       description: "${sei.application.name} 的API文档，运行环境: ${sei.application.env}"
