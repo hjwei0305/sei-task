@@ -20,7 +20,7 @@ import java.util.List;
  * @version 2020-02-11 16:40
  */
 @RestController
-@RequestMapping(path = "scheduleJob", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = "scheduleJob", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "ScheduleJobApi", tags = "后台作业调度服务API服务实现")
 public class ScheduleJobController implements ScheduleJobApi {
     @Autowired

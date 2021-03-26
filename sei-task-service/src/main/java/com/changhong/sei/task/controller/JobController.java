@@ -26,7 +26,7 @@ import java.util.List;
  * @version 2020-02-10 10:01
  */
 @RestController
-@RequestMapping(path = "job", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = "job", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "JobApi", tags = "后台作业API服务")
 public class JobController extends BaseEntityController<Job, JobDto>
         implements JobApi {

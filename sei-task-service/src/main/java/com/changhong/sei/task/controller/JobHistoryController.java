@@ -1,7 +1,6 @@
 package com.changhong.sei.task.controller;
 
 import com.changhong.sei.core.controller.BaseEntityController;
-import com.changhong.sei.core.controller.DefaultBaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 2020-02-10 15:32
  */
 @RestController
-@RequestMapping(path = "jobHistory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = "jobHistory", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "JobHistoryApi", tags = "后台作业执行历史")
 public class JobHistoryController extends BaseEntityController<JobHistory, JobHistoryDto>
         implements JobHistoryApi {

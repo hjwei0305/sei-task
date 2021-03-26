@@ -19,7 +19,7 @@ import java.util.Map;
  * @version 2020-02-10 16:02
  */
 @RestController
-@RequestMapping(path = "platformTask", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = "platformTask", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "PlatformTaskApi", tags = "SEI平台级的后台作业任务API服务")
 public class PlatformTaskController implements PlatformTaskApi {
     /**

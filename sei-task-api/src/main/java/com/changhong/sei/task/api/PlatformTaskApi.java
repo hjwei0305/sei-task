@@ -22,7 +22,7 @@ public interface PlatformTaskApi {
      * @param params 输入参数
      * @return 操作结果
      */
-    @PostMapping(path = "getInputParam", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(path = "getInputParam", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "带参数测试方法", notes = "带参数测试方法(获取输入参数)")
     ResultData getInputParam(@RequestBody Map<String,String> params);
 }

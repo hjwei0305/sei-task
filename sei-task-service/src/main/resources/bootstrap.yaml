@@ -1,13 +1,9 @@
 sei: # 应用全局配置
   application:
-    code: sei-task
-    name: 后台作业服务
     env: DEV
+    code: sei-task
     version: '@project_version@'
-    swagger:
-      title: "${sei.application.name} API"
-      description: "${sei.application.name} 的API文档，运行环境: ${sei.application.env}"
-      version: ${sei.application.version}
+    description: '@project_description@'
     # 在SEI3.0兼容模式升级项目中需要配置为true
     # compatible: false
   mock: # 本地调试的当前用户配置
@@ -19,14 +15,14 @@ spring:
   application:
     name: ${sei.application.code}
   cloud:
-    bus: # 启用平台的配置中心
-      trace:
-        enabled: true
-      enabled: true
-    config: # 配置中心地址
-      uri: http://dsei.changhong.com/config-center
+    # 配置中心地址
+    config:
       profile: ${sei.application.env} #当前环境
       name: ${spring.application.name}
+      # 配置中心服务地址
+      uri: http://sei.changhong.com/sei-manager/configserver
+      # 配置中心认证token
+      token: DEjjbZxTrSWNf
     zookeeper: #启用平台注册发现
       # zk地址
       connect-string: 10.4.208.132:2181

@@ -25,8 +25,9 @@ processResources {
     // 替换bootstrap.yaml文件中@project_version@占位符的值
     filesMatching('bootstrap.yaml') {
         filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                project_name   : project.property('name'),
-                project_version: project.property('version')
+                project_name       : project.property('name'),
+                project_version    : project.property('version'),
+                project_description: project.property('description')
         ]
     }
     // 默认application文件中的配置从配置中心获取
@@ -37,7 +38,7 @@ processResources {
 //打ar包
 bootJar  {
     enabled = true
-    archiveName = 'sei-task.jar'
+    archiveFileName = "${rootProject.name}.${archiveExtension.get()}"
     mainClassName = MainClass
     manifest {
         attributes("Manifest-Version": "6.0")

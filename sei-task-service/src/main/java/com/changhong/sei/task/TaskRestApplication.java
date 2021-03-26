@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @version 1.0.1 2019-12-18 10:41
  */
 @SpringBootApplication
-@EnableFeignClients(basePackages = {"com.changhong.sei.task.service.client"})
+//@EnableFeignClients(basePackages = {"com.changhong.sei.task.service.client"})
 public class TaskRestApplication extends SpringBootServletInitializer {
     /**
      * Configure the application. Normally all you would need to do is to add sources
