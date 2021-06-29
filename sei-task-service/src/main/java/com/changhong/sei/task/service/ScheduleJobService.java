@@ -51,7 +51,6 @@ public class ScheduleJobService {
                 if (StringUtils.equals("DEFAULT", key.getGroup())) {
                     continue;
                 }
-
                 Trigger trigger = scheduler.getTrigger(key);
                 if (Objects.isNull(trigger)) {
                     continue;
@@ -60,15 +59,10 @@ public class ScheduleJobService {
                 String id = jobKey.getName();
                 Job job = jobDao.findOne(id);
                 if (Objects.isNull(job)) {
+                    // 删除已经存在的垃圾调度任务
+                    removeJob(id, jobKey.getGroup());
                     continue;
                 }
-                /*
-                会删除手工执行的任务，故注释掉  modify by 2019-07-23
-                if (Objects.isNull(trigger.getNextFireTime())) {
-                    // 已过期，从调度器中删除
-                    removeJob(job);
-                    continue;
-                }*/
                 JobTrigger jobTrigger = new JobTrigger();
                 jobTrigger.setId(job.getId());
                 jobTrigger.setName(job.getName());
@@ -224,18 +218,7 @@ public class ScheduleJobService {
         String group = job.getAppModuleCode();
         // 定义jobKey
         assert id != null;
-        TriggerKey triggerKey = TriggerKey.triggerKey(id, group);
-        JobKey jobKey = JobKey.jobKey(id, group);
-        // 判断job否已经存在
-        boolean jobExists = scheduler.checkExists(jobKey);
-        if (jobExists) {
-            // 停止触发器
-            scheduler.pauseJob(jobKey);
-            // 移除触发器
-            scheduler.unscheduleJob(triggerKey);
-            // 删除job
-            scheduler.deleteJob(jobKey);
-        }
+        removeJob(id, group);
 
         // 构建job信息
         JobDetail jobDetail = JobBuilder.newJob(QuartzJobFactory.class)
@@ -263,8 +246,15 @@ public class ScheduleJobService {
     private void removeJob(Job job) throws SchedulerException {
         String id = job.getId();
         String group = job.getAppModuleCode();
-        // 定义jobKey
-        assert id != null;
+        removeJob(id, group);
+    }
+
+    /**
+     * 删除一个调度任务
+     * @param id 任务Id
+     * @param group 任务组
+     */
+    private void removeJob(String id,  String group) throws SchedulerException {
         TriggerKey triggerKey = TriggerKey.triggerKey(id, group);
         JobKey jobKey = JobKey.jobKey(id, group);
         // 判断job否已经存在

@@ -19,7 +19,7 @@ public class ScheduleJobControllerTest extends BaseUnitTest {
 
     @Test
     public void getJobStates() {
-        ResultData resultData = controller.getJobStates();
+        ResultData<?> resultData = controller.getJobStates();
         System.out.println(JsonUtils.toJson(resultData));
         Assert.assertTrue(resultData.successful());
     }
