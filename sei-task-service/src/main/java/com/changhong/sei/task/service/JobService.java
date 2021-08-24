@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.List;
@@ -74,6 +75,7 @@ public class JobService extends BaseEntityService<Job> {
      * @param job 作业任务
      * @return 操作结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public OperateResult addJob(Job job) {
         // 先创建后台作业
         OperateResultWithData<Job> saveResult = save(job);

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface JobDao extends BaseEntityDao<Job> {
+
     /**
      * 判断是否已经存在路径+方法相同的作业
      * @param id 作业Id

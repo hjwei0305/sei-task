@@ -60,13 +60,13 @@ public class JobHistory extends BaseEntity {
     /**
      * 执行消息
      */
-    @Column(name = "message", length = 500)
+    @Column(name = "message")
     private String message;
 
     /**
      * 异常消息
      */
-    @Column(name = "exception_message", length = 1000)
+    @Column(name = "exception_message")
     private String exceptionMessage;
 
     public Job getJob() {

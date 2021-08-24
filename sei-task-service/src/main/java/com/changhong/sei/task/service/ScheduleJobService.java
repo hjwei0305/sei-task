@@ -12,6 +12,7 @@ import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +88,7 @@ public class ScheduleJobService {
      * @param id 作业Id
      * @return 操作结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public OperateResult pauseJob(String id) {
         Job job = jobDao.findOne(id);
         if (Objects.isNull(job)) {
@@ -110,6 +112,7 @@ public class ScheduleJobService {
      * @param id 作业Id
      * @return 操作结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public OperateResult resumeJob(String id) {
         Job job = jobDao.findOne(id);
         if (Objects.isNull(job)) {
@@ -133,6 +136,7 @@ public class ScheduleJobService {
      * @param id 作业Id
      * @return 操作结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public OperateResult triggerJob(String id) {
         Job job = jobDao.findOne(id);
         if (Objects.isNull(job)) {
@@ -156,6 +160,7 @@ public class ScheduleJobService {
      * @param id 作业Id
      * @return 操作结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public OperateResult rescheduleJob(String id) {
         Job job = jobDao.findOne(id);
         if (Objects.isNull(job)) {
@@ -186,6 +191,7 @@ public class ScheduleJobService {
      * @param id 作业Id
      * @return 操作结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public OperateResult addJob(String id) {
         Job job = jobDao.findOne(id);
         if (Objects.isNull(job)) {
