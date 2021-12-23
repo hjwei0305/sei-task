@@ -99,7 +99,7 @@ public class JobService extends BaseEntityService<Job> {
     @Override
     protected OperateResultWithData<Job> preInsert(Job entity) {
         // 检查是否存在路径+方法重复的配置
-        String checkId = dao.checkPath("", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
+        String checkId = dao.checkPath("", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName(), entity.getExeTenantCode(), entity.getInputParam());
         if (StringUtils.isNotBlank(checkId)){
             // 后台作业【{0}-{1}-{2}】已经存在！
             return OperateResultWithData.operationFailure("00017", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
@@ -114,7 +114,7 @@ public class JobService extends BaseEntityService<Job> {
      */
     protected OperateResultWithData<Job> preUpdate(Job entity) {
         // 检查是否存在路径+方法重复的配置
-        String checkId = dao.checkPath(entity.getId(), entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());
+        String checkId = dao.checkPath(entity.getId(), entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName(), entity.getExeTenantCode(), entity.getInputParam());
         if (StringUtils.isNotBlank(checkId)){
             // 后台作业【{0}-{1}-{2}】已经存在！
             return OperateResultWithData.operationFailure("00017", entity.getAppModuleCode(), entity.getApiPath(), entity.getMethodName());

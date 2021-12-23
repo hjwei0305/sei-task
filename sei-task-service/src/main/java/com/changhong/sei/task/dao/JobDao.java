@@ -21,13 +21,15 @@ import org.springframework.stereotype.Repository;
 public interface JobDao extends BaseEntityDao<Job> {
 
     /**
-     * 判断是否已经存在路径+方法相同的作业
+     * 判断是否已经存在路径+方法+租户相同的作业
      * @param id 作业Id
      * @param appModuleCode 应用代码
      * @param apiPath 服务路径
      * @param methodName 方法名
+     * @param exeTenantCode 执行人租户代码
+     * @param inputParam 输入参数
      * @return 是否存在
      */
-    @Query("select j.id from Job j where j.id<>?1 and j.appModuleCode=?2 and j.apiPath=?3 and j.methodName=?4")
-    String checkPath(String id, String appModuleCode, String apiPath, String methodName);
+    @Query("select j.id from Job j where j.id<>?1 and j.appModuleCode=?2 and j.apiPath=?3 and j.methodName=?4 and j.exeTenantCode=?5 and j.inputParam=?6")
+    String checkPath(String id, String appModuleCode, String apiPath, String methodName, String exeTenantCode, String inputParam);
 }

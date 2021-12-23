@@ -56,7 +56,7 @@ public class JobControllerTest extends BaseUnitTest {
     @Test
     public void checkPath(){
         JobDto job = createJob();
-        String id = dao.checkPath("", job.getAppModuleCode(), job.getApiPath(), job.getMethodName());
+        String id = dao.checkPath("", job.getAppModuleCode(), job.getApiPath(), job.getMethodName(), job.getExeTenantCode(), job.getInputParam());
         System.out.println("id: "+id);
         Assert.assertTrue(StringUtils.isBlank(id));
     }
